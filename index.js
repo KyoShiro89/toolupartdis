@@ -11,7 +11,7 @@ var xlData = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
 
 //console.log(xlData);
 void (async()=>{
-    try{
+   // try{
         const brower = await puppeteer.launch(chromeOptions)
         const page = await brower.newPage()
         // await page.goto('https://scrapethissite.com/pages/forms/')
@@ -77,37 +77,51 @@ void (async()=>{
         for (let i = 0; i < xlData.length; i++) {
             var element = xlData[i];
             pilot = pilot +1;
-            const input = await page.$('input[type="file"]')
-            await input.uploadFile('D:/deverloper/puppeteer/upload displate/design/'+ element.Foldername + '/' + element.Imagename)
-            await page.waitFor(5000);
-            //kick design just upload
-            await page.click('#previewList > li:nth-child(' + pilot + ') > div.title.text.text--bold');
-            await page.waitFor(500);
-            //title
-            await page.focus('#title')
-            await page.keyboard.type(element.Title)
-            //des
-            await page.focus('#description')
-            await page.keyboard.type(element.Des)
-            //colection
-            await page.click('#multiuploader > div > div.multiuploader-container > div.editor-container > div.sidebar-wrapper > div.sidebar.editor > div.simplebar-scroll-content > div > div.editor__group.editor__group--collection > div.input-select.input-select--full-width > div.input-select__item.input-select__item--selected');
-            await page.waitFor(500);
-            await page.click('#multiuploader > div > div.multiuploader-container > div.editor-container > div.sidebar-wrapper > div.sidebar.editor > div.simplebar-scroll-content > div > div.editor__group.editor__group--collection > div.input-select.input-select--full-width > div.input-select__dropdown.collection__dropdown > div:nth-child('+ element.Collection + ')');
-              //Category
-            var cate = element.Category.split(',');
-            await page.click('#multiuploader > div > div.multiuploader-container > div.editor-container > div.sidebar-wrapper > div.sidebar.editor > div.simplebar-scroll-content > div > div.editor__group.category > div > div > div.simplebar-scroll-content > div > div > label:nth-child(' + cate[0] + ') > span.input-checkbox__checkmark');
-            await page.click('#multiuploader > div > div.multiuploader-container > div.editor-container > div.sidebar-wrapper > div.sidebar.editor > div.simplebar-scroll-content > div > div.editor__group.category > div > div > div.simplebar-scroll-content > div > div > label:nth-child(' + cate[1] + ') > span.input-checkbox__checkmark');
-            await page.click('#multiuploader > div > div.multiuploader-container > div.editor-container > div.sidebar-wrapper > div.sidebar.editor > div.simplebar-scroll-content > div > div.editor__group.category > div > div > div.simplebar-scroll-content > div > div > label:nth-child(' + cate[2] + ') > span.input-checkbox__checkmark');
-            //tag
-            async function setSelectVal(sel, val) {
-                    page.evaluate((data) => {
-                        return document.querySelector(data.sel).value = data.val;
-                    }, {sel, val})
+            iexcepj = 0;
+            try{
+                iexcepj = 0;
+                const input = await page.$('input[type="file"]')
+                await input.uploadFile('./design/'+ element.Foldername + '/' + element.Imagename)
+                await page.waitFor(5000);
+                //kick design just upload
+                await page.click('#previewList > li:nth-child(' + pilot + ') > div.title.text.text--bold');
+                await page.waitFor(500);
+                if(iexcepj == 0){
+                    
+                    //title
+                    await page.focus('#title')
+                    await page.keyboard.type(element.Title)
+                    //des
+                    await page.focus('#description')
+                    await page.keyboard.type(element.Des)
+                    //colection
+                    await page.click('#multiuploader > div > div.multiuploader-container > div.editor-container > div.sidebar-wrapper > div.sidebar.editor > div.simplebar-scroll-content > div > div.editor__group.editor__group--collection > div.input-select.input-select--full-width > div.input-select__item.input-select__item--selected');
+                    await page.waitFor(500);
+                    await page.click('#multiuploader > div > div.multiuploader-container > div.editor-container > div.sidebar-wrapper > div.sidebar.editor > div.simplebar-scroll-content > div > div.editor__group.editor__group--collection > div.input-select.input-select--full-width > div.input-select__dropdown.collection__dropdown > div:nth-child('+ element.Collection + ')');
+                    //Category
+                    var cate = element.Category.split(',');
+                    await page.click('#multiuploader > div > div.multiuploader-container > div.editor-container > div.sidebar-wrapper > div.sidebar.editor > div.simplebar-scroll-content > div > div.editor__group.category > div > div > div.simplebar-scroll-content > div > div > label:nth-child(' + cate[0] + ') > span.input-checkbox__checkmark');
+                    await page.click('#multiuploader > div > div.multiuploader-container > div.editor-container > div.sidebar-wrapper > div.sidebar.editor > div.simplebar-scroll-content > div > div.editor__group.category > div > div > div.simplebar-scroll-content > div > div > label:nth-child(' + cate[1] + ') > span.input-checkbox__checkmark');
+                    await page.click('#multiuploader > div > div.multiuploader-container > div.editor-container > div.sidebar-wrapper > div.sidebar.editor > div.simplebar-scroll-content > div > div.editor__group.category > div > div > div.simplebar-scroll-content > div > div > label:nth-child(' + cate[2] + ') > span.input-checkbox__checkmark');
+                    //tag
+                    async function setSelectVal(sel, val) {
+                            page.evaluate((data) => {
+                                return document.querySelector(data.sel).value = data.val;
+                            }, {sel, val})
+                        }
+                    await setSelectVal('#multiuploader > div > div.multiuploader-container > div.editor-container > div.sidebar-wrapper > div.sidebar.editor > div.simplebar-scroll-content > div > div.editor__group.tags > ul > li > input[type=text]', '')
+                    await page.waitFor(500);
+                    await page.focus('#multiuploader > div > div.multiuploader-container > div.editor-container > div.sidebar-wrapper > div.sidebar.editor > div.simplebar-scroll-content > div > div.editor__group.tags > ul > li > input[type=text]')
+                    await page.keyboard.type(element.Tag);
                 }
-            await setSelectVal('#multiuploader > div > div.multiuploader-container > div.editor-container > div.sidebar-wrapper > div.sidebar.editor > div.simplebar-scroll-content > div > div.editor__group.tags > ul > li > input[type=text]', '')
-            await page.waitFor(500);
-            await page.focus('#multiuploader > div > div.multiuploader-container > div.editor-container > div.sidebar-wrapper > div.sidebar.editor > div.simplebar-scroll-content > div > div.editor__group.tags > ul > li > input[type=text]')
-            await page.keyboard.type(element.Tag);
+                
+            }catch(error2){
+                iexcepj = 1;
+                pilot = pilot -1;
+                console.log(element.Imagename);
+                break;
+                //continue;
+            }
             //await promise;
         }
         
@@ -193,7 +207,7 @@ void (async()=>{
        // await browser.close();
 
 
-    }catch (error){
-        console.log(error);
-    }
+    // }catch (error){
+    //     console.log(error);
+    // }
 })()
